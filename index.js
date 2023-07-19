@@ -53,6 +53,7 @@ function get_randomPosition(){
 class Board{
       constructor(){
             this.emptyCase = 16
+            this.score = 0
       }
 
       /* ********************************************************* */
@@ -91,7 +92,7 @@ class Board{
             if (column >= 0 && column < COLUMNS){
                   let result = new Array
                   for (let r=0; r < ROWS; ++r) {
-                        result[r] = this.data[ r ] [ column ]
+                        result.push( this.data[ r ] [ column ])
                   }
                   return result
             }
@@ -101,11 +102,7 @@ class Board{
 
       get_row = (row) => {
             if (row >= 0 && row < ROWS){
-                  let result = new Array
-                  for (let c=0; c < COLUMNS; ++c) {
-                        result[r] = this.data[ row ] [ c ]
-                  }
-                  return result
+                  return this.data[row]
             }
       }
 
@@ -134,7 +131,7 @@ class Board{
       slide = (e) => {
             switch(e.code){
                   case 'ArrowUp':
-                        console.log("up");
+                        this.slideUp()
                         break
 
                   case 'ArrowDown':
@@ -153,10 +150,36 @@ class Board{
 
       /* ********************************************************* */
 
-      slideUp = () => {
-            console.log("Up")
-      }
+      slideLeft = () => {
+            for (let r=0; r < ROWS; ++r) {
+                  let rows = this.get_column(r)
+                  rows = removeZero(rows)
+                  this.data[r] = rows
 
+                  for (let x=0; x < rows.length - 1; ++x) {
+                        if (rows[x] == rows[x+1]){
+                              rows[x] *= 2
+                              rows[x+1] = 0
+                              this.score += rows[x]
+                        }
+                  }
+
+                  rows = removeZero(rows)
+
+                  while( rows.length < 4){
+                        rows.push(0)
+                  }
+
+                  
+                  this.data[r] = rows
+            }
+      }
+      /* ********************************************************* */
+
+      splash = () => {
+
+      }
+      
       /* ********************************************************* */
 
       slideDown = () => {
@@ -165,8 +188,8 @@ class Board{
 
       /* ********************************************************* */
 
-      slideLeft = () => {
-            console.log("left")
+      slideUp = () => {
+            console.log("Up")
       }
 
       /* ********************************************************* */
@@ -179,7 +202,7 @@ class Board{
 
       data = 
             [
-                  [2, 0, 0, 0], 
+                  [2, 0, 2, 0], 
                   [0, 512, 0, 0],
                   [0, 8192, 0, 0],
                   [0, 0, 0, 0]
@@ -242,13 +265,12 @@ class Game{
       }
 
       run = () => {
-            document.addEventListener('keyup', game.board.slide)
+            document.addEventListener('keyup', (e) => {
+                  this.board.slide(e)                  
+            })
             this.render.draw(this.board.data)
       }
 }
-
-// let pos = new Position(-1, 5)
-
 
 let game = new Game
 game.run()
