@@ -23,67 +23,67 @@ body{
       font-weight: bold;
 }
 
-.sprite-2{
+.x-2{
       background: #eee4da;
       color: #727371;
 }
 
-.sprite-4{
+.x-4{
       background: #00001a;
       color: #f5f5f5;
 }
 
-.sprite-8{
+.x-8{
       background: #ffa060;
       color: #f5f5f5;
 }
 
-.sprite-16{
+.x-16{
       background: #88cada;
       color: #333;
 }
 
-.sprite-32{
+.x-32{
       background: #feb800;
       color: #333;
 }
 
-.sprite-64{
+.x-64{
       background: #960932;
       color: #f5f5f5;
 }
 
-.sprite-128{
+.x-128{
       background: #9fa309;
       color: #333;
 }
 
-.sprite-256{
+.x-256{
       background: #d13870;
       color: #f5f5f5;
 }
 
-.sprite-512{
+.x-512{
       background: #807edf;
       color: #f5f5f5;
 }
 
-.sprite-1024{
+.x-1024{
       background: #ffb951;
       color: #0e0909;
 }
 
-.sprite-2048{
+.x-2048{
       background: #ed1d7d;
       color: #0e0909;;
 }
 
-.sprite-4096{
+.x-4096{
       background: #57ed1c;
       color: #0e0909;;
 }
 
-.sprite-8192{
+.x-8192{
       background: #4a4584;
       color: #f5f5f5;
 }

@@ -24,12 +24,12 @@ function generateValue( ){
 
 class Position{
       constructor(x, y){
-            if (x >= 0 && x < COLUMNS && y >= 0 && y >= 0 && y < ROWS) {
+            if (x >= 0 && x < COLUMNS && y >= 0  && y < ROWS) {
                   this.x = x
                   this.y = y
             }
             else{
-                  throw("Invalide position")
+                  throw ("Invalide position")
             }
       }
 
@@ -62,7 +62,7 @@ class Board{
       }
 
       /* ********************************************************* */
-      
+
       get_dataAtPosition = (pos) => {
             return this.data[ pos.get_x() ] [ pos.get_y() ]
       }
@@ -133,23 +133,74 @@ class Board{
 
       data = 
             [
-                  [0, 0, 0, 0], 
-                  [0, 0, 0, 0],
-                  [0, 0, 0, 0],
+                  [2, 0, 0, 0], 
+                  [0, 512, 0, 0],
+                  [0, 8192, 0, 0],
                   [0, 0, 0, 0]
             ]
 }
 
+/* ************************************************************
+ ********          R   E  N  D  E  R           *****************
+ ************************************************************ */
 class Render{
+      get_root = () => {
+            return document.getElementById('board')
+      }
 
-}
+      /* ********************************************************* */
 
-class Handler{
+      createTileID = (txt) => {
+            let tile = document.createElement('div')
+            tile.id = txt
 
+            return tile
+      }
+
+      /* ********************************************************* */
+
+      appendTileToRoot = (tile) => {
+            this.get_root().append(tile)
+      }
+
+      /* ********************************************************* */
+
+      updateTile = (tile, num) => {
+            tile.textContent = ""
+            tile.classList.value = ""
+            tile.classList.add("tile")
+
+            if (num > 0) {
+                  tile.textContent = num
+                  tile.classList.add("x-" + num.toString())
+            }
+      }
+
+      /* ********************************************************* */
+
+      draw = (data) => {
+            for (let r=0; r < ROWS; ++r) {
+                  for (let c = 0; c < COLUMNS; c++) {
+                        let tile = this.createTileID(r.toString() + "-" + c.toString())
+                        this.updateTile(tile, data[ r ] [ c ])
+                        this.appendTileToRoot(tile)                        
+                  }
+            }
+      }
 }
 
 class Game{
+      constructor(){
+            this.board = new Board
+            this.render = new Render
+      }
 
+      run = () => {
+            this.render.draw(this.board.data)
+      }
 }
 
-let pos = new Position(-1, 5)
+// let pos = new Position(-1, 5)
+
+let game = new Game
+game.run()
