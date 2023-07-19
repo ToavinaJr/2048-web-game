@@ -131,6 +131,52 @@ class Board{
 
       /* ********************************************************* */
 
+      slide = (e) => {
+            switch(e.code){
+                  case 'ArrowUp':
+                        console.log("up");
+                        break
+
+                  case 'ArrowDown':
+                        this.slideDown()
+                        break
+
+                  case 'ArrowLeft':
+                        this.slideLeft()
+                        break
+
+                  case 'ArrowRight':
+                        this.slideRight()
+                        break
+            }
+      }
+
+      /* ********************************************************* */
+
+      slideUp = () => {
+            console.log("Up")
+      }
+
+      /* ********************************************************* */
+
+      slideDown = () => {
+            console.log("Down")
+      }
+
+      /* ********************************************************* */
+
+      slideLeft = () => {
+            console.log("left")
+      }
+
+      /* ********************************************************* */
+
+      slideRight = () => {
+            console.log("Right")
+      }
+
+      /* ********************************************************* */
+
       data = 
             [
                   [2, 0, 0, 0], 
@@ -196,11 +242,13 @@ class Game{
       }
 
       run = () => {
+            document.addEventListener('keyup', game.board.slide)
             this.render.draw(this.board.data)
       }
 }
 
 // let pos = new Position(-1, 5)
+
 
 let game = new Game
 game.run()
