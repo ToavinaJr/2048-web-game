@@ -152,12 +152,11 @@ class Board{
 
       slideLeft = () => {
             for (let r=0; r < ROWS; ++r) {
-                  let rows = this.get_column(r)
+                  let rows = this.get_row(r)
                   rows = removeZero(rows)
-                  this.data[r] = rows
 
                   for (let x=0; x < rows.length - 1; ++x) {
-                        if (rows[x] == rows[x+1]){
+                        if (rows[x] === rows[x+1]){
                               rows[x] *= 2
                               rows[x+1] = 0
                               this.score += rows[x]
@@ -174,11 +173,7 @@ class Board{
                   this.data[r] = rows
             }
       }
-      /* ********************************************************* */
-
-      splash = () => {
-
-      }
+      
       
       /* ********************************************************* */
 
@@ -189,13 +184,53 @@ class Board{
       /* ********************************************************* */
 
       slideUp = () => {
-            console.log("Up")
+            for (let c=0; c < COLUMNS; ++c) {
+                  let columns = this.get_column(c)
+                  columns = removeZero(columns)
+
+                  for (let x=0; x < columns.length - 1; ++x) {
+                        if (columns[x] === columns[x+1]){
+                              columns[x] *= 2
+                              columns[x+1] = 0
+                              this.score += columns[x]
+                        }
+                  }
+
+                  columns = removeZero(columns)
+
+                  while( columns.length < 4){
+                        columns.push(0)
+                  }
+
+                  
+                  this.data[c] = columns
+            }
       }
 
       /* ********************************************************* */
 
       slideRight = () => {
-            console.log("Right")
+            for (let r=0; r < ROWS; ++r) {
+                  let rows = this.get_row(r)
+                  rows = removeZero(rows)
+                  rows.reverse()
+
+                  for (let x=3; x > 0 - 1; --x) {
+                        if (rows[x] === rows[x-1]){
+                              rows[x] *= 2
+                              rows[x-1] = 0
+                              this.score += rows[x]
+                        }
+                  }
+                  
+                  rows = removeZero(rows)
+
+                  while( rows.length < 4){
+                        rows.push(0)
+                  }
+                  
+                  this.data[r] = rows
+            }
       }
 
       /* ********************************************************* */
@@ -203,7 +238,7 @@ class Board{
       data = 
             [
                   [2, 0, 2, 0], 
-                  [0, 512, 0, 0],
+                  [, 512, 0, 512],
                   [0, 8192, 0, 0],
                   [0, 0, 0, 0]
             ]
@@ -265,12 +300,15 @@ class Game{
       }
 
       run = () => {
-            document.addEventListener('keyup', (e) => {
-                  this.board.slide(e)                  
-            })
             this.render.draw(this.board.data)
       }
 }
 
 let game = new Game
 game.run()
+document.addEventListener('keyup', (e) => {
+      let root = document.querySelector("#board")
+      root.innerHTML = ""
+      game.board.slide(e)
+      game.run()
+})
