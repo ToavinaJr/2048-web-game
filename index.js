@@ -76,9 +76,9 @@ class Board{
                   let y = Math.floor(Math.random()*4)
                   let pos = new Position(x, y)
 
-                  while(this.get_dataAtPosition(pos) != 0){
-                        x = Math.floor(Math.random()*4)
-                        y = Math.floor(Math.random()*4)
+                  while(this.get_dataAtPosition(pos) !== 0){
+                        x = Math.floor(Math.random()*COLUMNS)
+                        y = Math.floor(Math.random()*ROWS)
                         pos = new Position(x, y)
                   }
                   
@@ -109,20 +109,24 @@ class Board{
       /* ********************************************************* */
 
       set_dataAtPosition = (pos, value) => {
-            if (this.get_dataAtPosition(pos) == 0)
+            if (this.get_dataAtPosition(pos) === 0){
                   this.emptyCase--
-
-            this.data[ pos.get_x() ] [ pos.get_y() ] = value
+                  this.data[ pos.get_x() ] [ pos.get_y() ] = value
+            }
       }
 
       /* ********************************************************* */
 
       generator = () => {
-            if (this.emptyCase > 0){
+            if (this.emptyCase >= 0){
                   let pos = this.get_positionEmpty()
                   let value = generateValue()
 
-                  this.set_dataAtPosition(pos, value)
+                  if (this.get_dataAtPosition(pos) === 0){
+                        this.set_dataAtPosition(pos, value)                  
+                  }
+
+                  console.log(this.emptyCase, pos.x, pos.y, value)
             }
       }
 
@@ -146,6 +150,7 @@ class Board{
                         this.slideRight()
                         break
             }
+            this.generator()
       }
 
       /* ********************************************************* */
@@ -159,6 +164,7 @@ class Board{
                         if (rows[x] === rows[x+1]){
                               rows[x] *= 2
                               rows[x+1] = 0
+                              this.emptyCase++
                               this.score += rows[x]
                         }
                   }
@@ -168,17 +174,42 @@ class Board{
                   while( rows.length < 4){
                         rows.push(0)
                   }
-
                   
                   this.data[r] = rows
             }
+            // console.table(this.data)
       }
       
       
       /* ********************************************************* */
 
       slideDown = () => {
-            console.log("Down")
+            for (let c=0; c < COLUMNS; ++c) {
+                  let columns = this.get_column(c)
+                  columns = removeZero(columns)
+                  columns.reverse()
+
+                  for (let x=0; x < columns.length - 1; ++x) {
+                        if (columns[x] === columns[x+1]){
+                              columns[x] *= 2
+                              columns[x+1] = 0
+                              this.emptyCase++
+                              this.score += columns[x]
+                        }
+                  }
+
+                  columns = removeZero(columns)
+
+                  while( columns.length < ROWS){
+                        columns.push(0)
+                  }
+                  
+                  columns.reverse()
+
+                  for (let j=0; j < COLUMNS; ++j){
+                        this.data[j][c] = columns[j]
+                  }
+            }
       }
 
       /* ********************************************************* */
@@ -192,18 +223,20 @@ class Board{
                         if (columns[x] === columns[x+1]){
                               columns[x] *= 2
                               columns[x+1] = 0
+                              this.emptyCase++
                               this.score += columns[x]
                         }
                   }
 
                   columns = removeZero(columns)
 
-                  while( columns.length < 4){
+                  while( columns.length < ROWS){
                         columns.push(0)
                   }
-
                   
-                  this.data[c] = columns
+                  for (let j=0; j < COLUMNS; ++j){
+                        this.data[j][c] = columns[j]
+                  }
             }
       }
 
@@ -215,10 +248,11 @@ class Board{
                   rows = removeZero(rows)
                   rows.reverse()
 
-                  for (let x=3; x > 0 - 1; --x) {
-                        if (rows[x] === rows[x-1]){
+                  for (let x=0; x < rows.length ; ++x) {
+                        if (rows[x] === rows[x+1]){
                               rows[x] *= 2
-                              rows[x-1] = 0
+                              rows[x+1] = 0
+                              this.emptyCase++
                               this.score += rows[x]
                         }
                   }
@@ -228,18 +262,19 @@ class Board{
                   while( rows.length < 4){
                         rows.push(0)
                   }
-                  
+                  rows.reverse()
                   this.data[r] = rows
             }
+            // console.table(this.data)
       }
 
       /* ********************************************************* */
 
       data = 
             [
-                  [2, 0, 2, 0], 
-                  [, 512, 0, 512],
-                  [0, 8192, 0, 0],
+                  [0, 0, 0, 0], 
+                  [0, 0, 0, 0],
+                  [0, 0, 0, 0],
                   [0, 0, 0, 0]
             ]
 }
@@ -309,6 +344,11 @@ game.run()
 document.addEventListener('keyup', (e) => {
       let root = document.querySelector("#board")
       root.innerHTML = ""
+
+      let scoreText = document.querySelector("#score")
+      scoreText.innerHTML = ""
+      scoreText.innerHTML = game.board.score
+
       game.board.slide(e)
       game.run()
 })
