@@ -118,7 +118,7 @@ class Board{
       /* ********************************************************* */
 
       generator = () => {
-            if (this.emptyCase >= 0){
+            if (this.emptyCase > 0 || this.has_possible_move()){
                   let pos = this.get_positionEmpty()
                   let value = generateValue()
 
@@ -269,7 +269,28 @@ class Board{
       }
 
       /* ********************************************************* */
+      
+      has_possible_move = () => {
+            for (let i=0; i < ROWS; ++i)
+            {
+                  for (let j=0; j < COLUMNS - 1; ++j)
+                  {
+                        if ( this.data[i] [j] == this.data[i] [j+1])
+                              return true;
+                  }
+            }
 
+            for (let j=0; j < COLUMNS - 1; ++j)
+            {
+                  for (let i=0; i < ROWS-1; ++i)
+                  {
+                        if ( this.data[i] [j] == this.data[i+1] [j])
+                              return true;
+                  }
+            }
+
+            return false;
+      }
       data = 
             [
                   [0, 0, 0, 0], 
@@ -328,8 +349,10 @@ class Render{
       }
 }
 
-class Game{
-      constructor(){
+class Game
+{
+      constructor()
+      {
             this.board = new Board
             this.render = new Render
       }
@@ -341,14 +364,27 @@ class Game{
 
 let game = new Game
 game.run()
+
 document.addEventListener('keyup', (e) => {
-      let root = document.querySelector("#board")
-      root.innerHTML = ""
 
-      let scoreText = document.querySelector("#score")
-      scoreText.innerHTML = ""
-      scoreText.innerHTML = game.board.score
-
-      game.board.slide(e)
-      game.run()
+      if (game.board.emptyCase > 0  || game.board.has_possible_move())
+      {
+            let root = document.querySelector("#board")
+            root.innerHTML = ""
+      
+            let scoreText = document.querySelector("#score")
+            scoreText.innerHTML = ""
+            scoreText.innerHTML = game.board.score
+      
+            game.board.slide(e)
+      
+            game.run()
+      }     
 })
+
+if (game.board.emptyCase <= 0)
+{
+      let body = document.querySelector('body')
+      body.innerHTML = ""
+      document.removeEventListener();
+}
